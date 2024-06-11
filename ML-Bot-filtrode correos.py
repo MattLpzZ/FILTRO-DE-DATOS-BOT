@@ -3,11 +3,47 @@ import tkinter.filedialog as filedialog
 import os
 import re
 import smtplib
+import shutil
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 from email.mime.base import MIMEBase
 from email import encoders
-from pyupdater.client import Client
+import requests
+import subprocess
+
+def download_update():
+    # URL del repositorio de GitHub
+    github_repo_url = "https://api.github.com/repos/MattLpzZ/FILTRO-DE-DATOS-BOT/contents/"
+    
+    # Obtener información sobre los archivos en el repositorio
+    try:
+        response = requests.get(github_repo_url)
+        response.raise_for_status()
+        repo_contents = response.json()
+    except requests.exceptions.RequestException as e:
+        print("Error al obtener información del repositorio:", e)
+        return False
+    
+    # Descargar y sobrescribir los archivos locales con los archivos de la última versión en GitHub
+    try:
+        for item in repo_contents:
+            file_url = item["download_url"]
+            filename = item["name"]
+            if os.path.exists(filename):
+                os.remove(filename)
+            with requests.get(file_url) as r:
+                with open(filename, "wb") as f:
+                    f.write(r.content)
+    except Exception as e:
+        print("Error al descargar la actualización:", e)
+        return False
+    
+    return True
+
+def check_for_updates():
+    if download_update():
+        subprocess.Popen(["python", "tu_aplicacion.py"])
+        exit()
 
 # Código de envío de correo electrónico
 
@@ -136,16 +172,6 @@ def filter_files():
         send_email(other_domains_filename)
 
     console.insert(tk.END, "Filtrado completo.\n")
-
-# Configuración de PyUpdater
-client = Client('https://github.com/TU_USUARIO/TU_REPOSITORIO')
-
-def check_for_updates():
-    client.refresh()
-    if client.update_check():
-        if tk.messagebox.askyesno('Actualizar', 'Hay una nueva actualización disponible. ¿Quieres actualizar?'):
-            client.download_update()
-            client.extract_restart()
 
 # Interfaz de usuario de Tkinter
 root = tk.Tk()
