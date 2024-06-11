@@ -92,6 +92,17 @@ def filter_files():
     known_domains = ['com', 'es', 'us']
     other_domains = []
 
+        # Obtener el directorio raíz donde se encuentra el programa
+    root_directory = os.getcwd()
+
+    for filename in filenames:
+        file_basename = os.path.basename(filename).split('.')[0]
+        output_dir = os.path.join(root_directory, file_basename)
+        os.makedirs(output_dir, exist_ok=True)
+
+        with open(filename, "r", encoding="utf-8") as f:
+            lines = f.readlines()
+
     for filename in filenames:
         file_basename = os.path.basename(filename).split('.')[0]
         output_dir = os.path.join(os.getcwd(), file_basename)
