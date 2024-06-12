@@ -199,7 +199,7 @@ def main():
     domain_var = tk.BooleanVar()
     country_var = tk.BooleanVar()
 
-    domain_check = tk.Checkbutton(frame, text="Filtrar por Dominio", variable=domain_var)
+    domain_check = tk.Checkbutton(frame, text="Filtrar por Datos", variable=domain_var)
     domain_check.pack(anchor='w')
 
     country_check = tk.Checkbutton(frame, text="Filtrar por País", variable=country_var)
