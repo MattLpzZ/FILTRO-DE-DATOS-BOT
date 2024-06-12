@@ -1,9 +1,10 @@
 import os
 import requests
 import subprocess
+import tkinter as tk
+from tkinter import messagebox
 
 def download_update():
-    # URL del repositorio de GitHub
     github_repo_url = "https://api.github.com/repos/MattLpzZ/FILTRO-DE-DATOS-BOT/contents/"
     
     try:
@@ -11,7 +12,7 @@ def download_update():
         response.raise_for_status()
         repo_contents = response.json()
     except requests.exceptions.RequestException as e:
-        print("Error al obtener información del repositorio:", e)
+        messagebox.showerror("Error", f"Error al obtener información del repositorio: {e}")
         return False
     
     try:
@@ -24,7 +25,7 @@ def download_update():
                 with open(filename, "wb") as f:
                     f.write(r.content)
     except Exception as e:
-        print("Error al descargar la actualización:", e)
+        messagebox.showerror("Error", f"Error al descargar la actualización: {e}")
         return False
     
     return True
@@ -38,7 +39,7 @@ def check_for_updates():
         response.raise_for_status()
         latest_version = response.text.strip()
     except requests.exceptions.RequestException as e:
-        print("Error al obtener la versión más reciente:", e)
+        messagebox.showerror("Error", f"Error al obtener la versión más reciente: {e}")
         return False
 
     if latest_version > current_version:
@@ -47,15 +48,18 @@ def check_for_updates():
         return False
 
 def main():
+    root = tk.Tk()
+    root.withdraw()  # Ocultar la ventana principal
     if check_for_updates():
-        print("Hay una nueva actualización disponible. El bot se actualizará y reiniciará.")
+        messagebox.showinfo("Actualización disponible", "Hay una nueva actualización disponible. El bot se actualizará y reiniciará.")
         if download_update():
             subprocess.Popen(["main.exe"])
             exit()
         else:
-            print("Error al descargar la actualización.")
+            messagebox.showerror("Error", "Error al descargar la actualización.")
     else:
-        print("No hay nuevas actualizaciones disponibles.")
+        messagebox.showinfo("Actualización", "No hay nuevas actualizaciones disponibles.")
+    root.destroy()
 
 if __name__ == "__main__":
     main()

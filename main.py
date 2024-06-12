@@ -3,13 +3,14 @@ import tkinter.filedialog as filedialog
 import os
 import re
 import smtplib
-import shutil
+import requests
+import subprocess
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 from email.mime.base import MIMEBase
 from email import encoders
-import requests
-import subprocess
+
+current_version = "1.0.0"  # La versión actual del programa
 
 def send_email(filename):
     fromaddr = "boredoeleazar@gmail.com"  # Reemplaza con tu dirección de correo
@@ -182,39 +183,43 @@ def download_update():
     
     return True
 
-root = tk.Tk()
-root.title("Email Filter Bot")
+def main():
+    root = tk.Tk()
+    root.title("Email Filter Bot")
 
-frame = tk.Frame(root)
-frame.pack(side=tk.LEFT, anchor='nw', padx=10, pady=10)
+    frame = tk.Frame(root)
+    frame.pack(side=tk.LEFT, anchor='nw', padx=10, pady=10)
 
-label = tk.Label(frame, text="Opciones de filtrado:")
-label.pack(anchor='w')
+    label = tk.Label(frame, text="Opciones de filtrado:")
+    label.pack(anchor='w')
 
-domain_var = tk.BooleanVar()
-country_var = tk.BooleanVar()
+    domain_var = tk.BooleanVar()
+    country_var = tk.BooleanVar()
 
-domain_check = tk.Checkbutton(frame, text="Filtrar por Dominio", variable=domain_var)
-domain_check.pack(anchor='w')
+    domain_check = tk.Checkbutton(frame, text="Filtrar por Dominio", variable=domain_var)
+    domain_check.pack(anchor='w')
 
-country_check = tk.Checkbutton(frame, text="Filtrar por País", variable=country_var)
-country_check.pack(anchor='w')
+    country_check = tk.Checkbutton(frame, text="Filtrar por País", variable=country_var)
+    country_check.pack(anchor='w')
 
-button = tk.Button(frame, text="Filtrar Archivos", command=filter_files)
-button.pack(anchor='w')
+    button = tk.Button(frame, text="Filtrar Archivos", command=filter_files)
+    button.pack(anchor='w')
 
-update_button = tk.Button(frame, text="Verificar Actualizaciones", command=check_for_updates)
-update_button.pack(anchor='w')
+    update_button = tk.Button(frame, text="Verificar Actualizaciones", command=check_for_updates)
+    update_button.pack(anchor='w')
 
-version_label = tk.Label(frame, text="Versión: 1.0.0")
-version_label.pack(anchor='w')
+    version_label = tk.Label(frame, text=f"Versión: {current_version}")
+    version_label.pack(anchor='w')
 
-console_label = tk.Label(frame, text="Consola de Progreso:")
-console_label.pack(anchor='w')
+    console_label = tk.Label(frame, text="Consola de Progreso:")
+    console_label.pack(anchor='w')
 
-console = tk.Text(frame, height=15, width=50)
-console.pack(anchor='w')
+    global console
+    console = tk.Text(frame, height=15, width=50)
+    console.pack(anchor='w')
 
-current_version = "1.0.0"  # La versión actual del programa
+    root.after(1000, check_for_updates)
+    root.mainloop()
 
-root.mainloop()
+if __name__ == "__main__":
+    main()
