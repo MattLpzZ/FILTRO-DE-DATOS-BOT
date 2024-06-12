@@ -45,54 +45,23 @@ def check_for_updates():
         return False
 
     if latest_version > current_version:
+        return True
+    else:
+        return False
+
+def main():
+    root = tk.Tk()
+    root.withdraw()  # Ocultar la ventana principal
+    if check_for_updates():
         messagebox.showinfo("Actualización disponible", "Hay una nueva actualización disponible. El bot se actualizará y reiniciará.")
         if download_update():
             subprocess.Popen(["main.exe"])
-            root.destroy()  # Cierra la ventana actual
-            exit()  # Sale del proceso actual
+            exit()
         else:
             messagebox.showerror("Error", "Error al descargar la actualización.")
     else:
         messagebox.showinfo("Actualización", "No hay nuevas actualizaciones disponibles.")
-
-def main():
-    global root
-    root = tk.Tk()
-    root.title("Data Filter Bot by@MattLpzZ")
-
-    frame = tk.Frame(root)
-    frame.pack(side=tk.LEFT, anchor='nw', padx=10, pady=10)
-
-    label = tk.Label(frame, text="Opciones de filtrado:")
-    label.pack(anchor='w')
-
-    global domain_var, country_var
-    domain_var = tk.BooleanVar()
-    country_var = tk.BooleanVar()
-
-    domain_check = tk.Checkbutton(frame, text="Filtrar por Dominio", variable=domain_var)
-    domain_check.pack(anchor='w')
-
-    country_check = tk.Checkbutton(frame, text="Filtrar por País", variable=country_var)
-    country_check.pack(anchor='w')
-
-    button = tk.Button(frame, text="Filtrar Archivos", command=filter_files)
-    button.pack(anchor='w')
-
-    update_button = tk.Button(frame, text="Verificar Actualizaciones", command=check_for_updates)
-    update_button.pack(anchor='w')
-
-    version_label = tk.Label(frame, text="Versión: 1.0.1")
-    version_label.pack(anchor='w')
-
-    console_label = tk.Label(frame, text="Consola de Progreso:")
-    console_label.pack(anchor='w')
-
-    global console
-    console = tk.Text(frame, height=15, width=50)
-    console.pack(anchor='w')
-
-    root.mainloop()
+    root.destroy()
 
 if __name__ == "__main__":
     main()
