@@ -187,7 +187,7 @@ def download_update():
 
 def main():
     root = tk.Tk()
-    root.title("Data Filter Bot by@MattLpzZ")
+    root.title("Data Filter Bot by@MattLpzZ :>")
 
     frame = tk.Frame(root)
     frame.pack(side=tk.LEFT, anchor='nw', padx=10, pady=10)
