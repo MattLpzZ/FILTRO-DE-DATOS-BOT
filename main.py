@@ -10,7 +10,7 @@ from email.mime.text import MIMEText
 from email.mime.base import MIMEBase
 from email import encoders
 
-current_version = "1.0.1"  # La versión actual del programa
+current_version = "1.0.0"  # La versión actual del programa
 
 def send_email(filename):
     fromaddr = "boredoeleazar@gmail.com"  # Reemplaza con tu dirección de correo
@@ -170,13 +170,15 @@ def download_update():
     
     try:
         for item in repo_contents:
-            file_url = item["download_url"]
+            file_url = item.get("download_url")
             filename = item["name"]
-            if os.path.exists(filename):
-                os.remove(filename)
-            with requests.get(file_url) as r:
-                with open(filename, "wb") as f:
-                    f.write(r.content)
+            if file_url:  # Solo intentar descargar si hay un URL válido
+                if os.path.exists(filename):
+                    os.remove(filename)
+                with requests.get(file_url) as r:
+                    r.raise_for_status()  # Asegurarse de que no haya errores en la descarga
+                    with open(filename, "wb") as f:
+                        f.write(r.content)
     except Exception as e:
         console.insert(tk.END, f"Error al descargar la actualización: {e}\n")
         return False
@@ -193,6 +195,7 @@ def main():
     label = tk.Label(frame, text="Opciones de filtrado:")
     label.pack(anchor='w')
 
+    global domain_var, country_var
     domain_var = tk.BooleanVar()
     country_var = tk.BooleanVar()
 

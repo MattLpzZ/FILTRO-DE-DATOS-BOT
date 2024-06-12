@@ -17,13 +17,15 @@ def download_update():
     
     try:
         for item in repo_contents:
-            file_url = item["download_url"]
+            file_url = item.get("download_url")
             filename = item["name"]
-            if os.path.exists(filename):
-                os.remove(filename)
-            with requests.get(file_url) as r:
-                with open(filename, "wb") as f:
-                    f.write(r.content)
+            if file_url:  # Solo intentar descargar si hay un URL válido
+                if os.path.exists(filename):
+                    os.remove(filename)
+                with requests.get(file_url) as r:
+                    r.raise_for_status()  # Asegurarse de que no haya errores en la descarga
+                    with open(filename, "wb") as f:
+                        f.write(r.content)
     except Exception as e:
         messagebox.showerror("Error", f"Error al descargar la actualización: {e}")
         return False
@@ -31,7 +33,7 @@ def download_update():
     return True
 
 def check_for_updates():
-    current_version = "1.0.0"  # Cambia esto según la versión actual
+    current_version = "1.0.1"  # Cambia esto según la versión actual
     version_url = "https://raw.githubusercontent.com/MattLpzZ/FILTRO-DE-DATOS-BOT/main/version.txt"
     
     try:
