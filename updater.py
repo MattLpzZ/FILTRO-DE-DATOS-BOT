@@ -5,7 +5,7 @@ import tkinter as tk
 from tkinter import messagebox
 
 def download_update():
-    github_repo_url = "https://api.github.com/repos/MattLpzZ/FILTRO-DE-DATOS-BOT/contents/"
+    github_repo_url = "https://github.com/MattLpzZ/FILTRO-DE-DATOS-BOT"
     
     try:
         response = requests.get(github_repo_url)
