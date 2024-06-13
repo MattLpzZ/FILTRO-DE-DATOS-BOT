@@ -136,8 +136,6 @@ def filter_files():
 
     console.insert(tk.END, "Filtrado completo.\n")
 
-#XXXXXXXXXXXXXXX
-
 def main():
     root = tk.Tk()
     root.title("Data Filter Bot by@MattLpzZ :>")
