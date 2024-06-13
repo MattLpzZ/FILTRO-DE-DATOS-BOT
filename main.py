@@ -4,7 +4,6 @@ import os
 import re
 import smtplib
 import requests
-import subprocess
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 from email.mime.base import MIMEBase
@@ -136,55 +135,6 @@ def filter_files():
 
     console.insert(tk.END, "Filtrado completo.\n")
 
-def check_for_updates():
-    version_url = "https://raw.githubusercontent.com/MattLpzZ/FILTRO-DE-DATOS-BOT/main/version.txt"
-    
-    try:
-        response = requests.get(version_url)
-        response.raise_for_status()
-        latest_version = response.text.strip()
-    except requests.exceptions.RequestException as e:
-        console.insert(tk.END, "Error al obtener la versión más reciente.\n")
-        return
-
-    if latest_version > current_version:
-        console.insert(tk.END, "Hay una nueva actualización disponible. El bot se actualizará y reiniciará.\n")
-        if download_update():
-            subprocess.Popen(["main.exe"])
-            exit()
-        else:
-            console.insert(tk.END, "Error al descargar la actualización.\n")
-    else:
-        console.insert(tk.END, "No hay nuevas actualizaciones disponibles.\n")
-
-def download_update():
-    github_repo_url = "https://api.github.com/repos/MattLpzZ/FILTRO-DE-DATOS-BOT/contents/"
-    
-    try:
-        response = requests.get(github_repo_url)
-        response.raise_for_status()
-        repo_contents = response.json()
-    except requests.exceptions.RequestException as e:
-        console.insert(tk.END, f"Error al obtener información del repositorio: {e}\n")
-        return False
-    
-    try:
-        for item in repo_contents:
-            file_url = item.get("download_url")
-            filename = item["name"]
-            if file_url:  # Solo intentar descargar si hay un URL válido
-                if os.path.exists(filename):
-                    os.remove(filename)
-                with requests.get(file_url) as r:
-                    r.raise_for_status()  # Asegurarse de que no haya errores en la descarga
-                    with open(filename, "wb") as f:
-                        f.write(r.content)
-    except Exception as e:
-        console.insert(tk.END, f"Error al descargar la actualización: {e}\n")
-        return False
-    
-    return True
-
 def main():
     root = tk.Tk()
     root.title("Data Filter Bot by@MattLpzZ :>")
@@ -208,7 +158,7 @@ def main():
     button = tk.Button(frame, text="Filtrar Archivos", command=filter_files)
     button.pack(anchor='w')
 
-    update_button = tk.Button(frame, text="Verificar Actualizaciones", command=check_for_updates)
+    update_button = tk.Button(frame, text="Verificar Actualizaciones", command=lambda: subprocess.Popen(["python", "updater.py"]))
     update_button.pack(anchor='w')
 
     version_label = tk.Label(frame, text=f"Versión: {current_version}")
@@ -221,7 +171,6 @@ def main():
     console = tk.Text(frame, height=15, width=50)
     console.pack(anchor='w')
 
-    root.after(1000, check_for_updates)
     root.mainloop()
 
 if __name__ == "__main__":

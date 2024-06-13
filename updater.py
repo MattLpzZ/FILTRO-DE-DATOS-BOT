@@ -5,7 +5,7 @@ import tkinter as tk
 from tkinter import messagebox
 
 def download_update():
-    github_repo_url = "https://github.com/MattLpzZ/FILTRO-DE-DATOS-BOT"
+    github_repo_url = "https://api.github.com/repos/MattLpzZ/FILTRO-DE-DATOS-BOT/contents/"
     
     try:
         response = requests.get(github_repo_url)
@@ -19,11 +19,11 @@ def download_update():
         for item in repo_contents:
             file_url = item.get("download_url")
             filename = item["name"]
-            if file_url:  # Solo intentar descargar si hay un URL válido
+            if file_url:
                 if os.path.exists(filename):
                     os.remove(filename)
                 with requests.get(file_url) as r:
-                    r.raise_for_status()  # Asegurarse de que no haya errores en la descarga
+                    r.raise_for_status()
                     with open(filename, "wb") as f:
                         f.write(r.content)
     except Exception as e:
@@ -33,7 +33,7 @@ def download_update():
     return True
 
 def check_for_updates():
-    current_version = "1.0.1"  # Cambia esto según la versión actual
+    current_version = "1.0.0"  # Cambia esto según la versión actual
     version_url = "https://raw.githubusercontent.com/MattLpzZ/FILTRO-DE-DATOS-BOT/main/version.txt"
     
     try:
@@ -47,7 +47,7 @@ def check_for_updates():
     if latest_version > current_version:
         messagebox.showinfo("Actualización disponible", "Hay una nueva actualización disponible. El bot se actualizará y reiniciará.")
         if download_update():
-            subprocess.Popen(["main.exe"])
+            subprocess.Popen(["python", "main.py"])
             root.destroy()  # Cierra la ventana actual
             exit()  # Sale del proceso actual
         else:
@@ -58,39 +58,13 @@ def check_for_updates():
 def main():
     global root
     root = tk.Tk()
-    root.title("Data Filter Bot by@MattLpzZ :>")
+    root.title("Actualizador del Data Filter Bot")
 
     frame = tk.Frame(root)
     frame.pack(side=tk.LEFT, anchor='nw', padx=10, pady=10)
 
-    label = tk.Label(frame, text="Opciones de filtrado:")
-    label.pack(anchor='w')
-
-    global domain_var, country_var
-    domain_var = tk.BooleanVar()
-    country_var = tk.BooleanVar()
-
-    domain_check = tk.Checkbutton(frame, text="Filtrar por Dominio", variable=domain_var)
-    domain_check.pack(anchor='w')
-
-    country_check = tk.Checkbutton(frame, text="Filtrar por País", variable=country_var)
-    country_check.pack(anchor='w')
-
-    button = tk.Button(frame, text="Filtrar Archivos", command=filter_files)
-    button.pack(anchor='w')
-
     update_button = tk.Button(frame, text="Verificar Actualizaciones", command=check_for_updates)
     update_button.pack(anchor='w')
-
-    version_label = tk.Label(frame, text="Versión: 1.0.1")
-    version_label.pack(anchor='w')
-
-    console_label = tk.Label(frame, text="Consola de Progreso:")
-    console_label.pack(anchor='w')
-
-    global console
-    console = tk.Text(frame, height=15, width=50)
-    console.pack(anchor='w')
 
     root.mainloop()
 
