@@ -5,7 +5,7 @@ import tkinter as tk
 from tkinter import messagebox
 
 def download_update():
-    github_repo_url = "https://api.github.com/repos/MattLpzZ/FILTRO-DE-DATOS-BOT/contents/"
+    github_repo_url = "https://github.com/MattLpzZ/FILTRO-DE-DATOS-BOT"
     
     try:
         response = requests.get(github_repo_url)
@@ -19,11 +19,11 @@ def download_update():
         for item in repo_contents:
             file_url = item.get("download_url")
             filename = item["name"]
-            if file_url:
+            if file_url:  # Solo intentar descargar si hay un URL válido
                 if os.path.exists(filename):
                     os.remove(filename)
                 with requests.get(file_url) as r:
-                    r.raise_for_status()
+                    r.raise_for_status()  # Asegurarse de que no haya errores en la descarga
                     with open(filename, "wb") as f:
                         f.write(r.content)
     except Exception as e:
@@ -33,7 +33,7 @@ def download_update():
     return True
 
 def check_for_updates():
-    current_version = "1.0.0"  # Cambia esto según la versión actual
+    # Leer la versión actual del archivo version.txt en GitHub
     version_url = "https://raw.githubusercontent.com/MattLpzZ/FILTRO-DE-DATOS-BOT/main/version.txt"
     
     try:
@@ -43,6 +43,13 @@ def check_for_updates():
     except requests.exceptions.RequestException as e:
         messagebox.showerror("Error", f"Error al obtener la versión más reciente: {e}")
         return False
+
+    # Leer la versión actual del archivo version.txt en el directorio local
+    try:
+        with open("version.txt", "r") as f:
+            current_version = f.read().strip()
+    except FileNotFoundError:
+        current_version = "1.0.0"  # Si no se encuentra version.txt, asume la versión inicial
 
     if latest_version > current_version:
         messagebox.showinfo("Actualización disponible", "Hay una nueva actualización disponible. El bot se actualizará y reiniciará.")
