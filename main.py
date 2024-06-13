@@ -4,6 +4,7 @@ import os
 import re
 import smtplib
 import requests
+import subprocess  # Importa el módulo subprocess
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 from email.mime.base import MIMEBase
