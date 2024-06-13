@@ -55,6 +55,9 @@ def check_for_updates():
     else:
         messagebox.showinfo("Actualización", "No hay nuevas actualizaciones disponibles.")
 
+#XXXXXXXXXXXXXXX
+
+
 def main():
     global root
     root = tk.Tk()
