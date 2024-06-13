@@ -10,7 +10,7 @@ from email.mime.text import MIMEText
 from email.mime.base import MIMEBase
 from email import encoders
 
-current_version = "1.0.3"  # La versión actual del programa
+current_version = "1.0.4"  # La versión actual del programa
 
 def send_email(filename):
     fromaddr = "boredoeleazar@gmail.com"  # Reemplaza con tu dirección de correo
