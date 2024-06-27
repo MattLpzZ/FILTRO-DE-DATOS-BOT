@@ -11,8 +11,8 @@ from email import encoders
 import pandas as pd
 from datetime import datetime
 
-#BOT MULTI-HERRAMIENTAS 
-current_version = "1.0.5"  # La versión actual del programa
+#BOT TEST
+current_version = "1.0."  # La versión actual del programa
 
 def send_email(filename):
     fromaddr = "boredoeleazar@gmail.com"  # Reemplaza con tu dirección de correo
